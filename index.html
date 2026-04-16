@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Dordenma | Café & Restaurant Menu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #fefaf5;
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            color: #2c2418;
+            line-height: 1.5;
+        }
+
+        /* ========= STICKY HEADER CONTAINER ========= */
+        .sticky-header-group {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        /* HEADER: Logo left, Company centered */
+        .header-container {
+            background: #331f02;
+            border-bottom: 3px solid #d0d326a2;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            padding: 0.7rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        /* LEFT: Logo - NO max-width, NO max-height, you control dimensions */
+        .logo-wrapper {
+            flex-shrink: 0;
+        }
+        .logo {
+            display: block;
+            width: auto;
+            height: auto;
+            /* No restrictions - you can set exact width/height on the img tag or via inline style */
+        }
+
+        /* CENTER: Company Name & Tagline */
+        .brand-center {
+            text-align: center;
+            flex: 1;
+        }
+        .brand-center h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 1.6rem;
+            letter-spacing: 1px;
+            color: #ffffff;
+            margin: 0;
+            line-height: 1.2;
+        }
+        .company-tagline {
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #f5e6d3;
+            margin-top: 0.2rem;
+            font-weight: 400;
+        }
+
+        /* Placeholder for right side to keep centering (empty) */
+        .header-placeholder {
+            width: 70px;
+            flex-shrink: 0;
+            visibility: hidden;
+        }
+
+        /* ========= 3 CATEGORY FILTER BUTTONS ========= */
+        .filter-bar {
+            background: #ffffff;
+            border-bottom: 1px solid #eedfcb;
+            padding: 0.8rem 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            backdrop-filter: blur(12px);
+            background: rgba(255, 252, 245, 0.98);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .filter-btn {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 0.4rem 1.4rem;
+            border-radius: 40px;
+            background: transparent;
+            border: 1.5px solid #d4b48c;
+            color: #4a2e22;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            letter-spacing: 0.5px;
+        }
+        .filter-btn.active {
+            background: #c9a063;
+            border-color: #c9a063;
+            color: white;
+            box-shadow: 0 2px 6px rgba(201,160,99,0.3);
+        }
+        .filter-btn:hover:not(.active) {
+            background: #f2e4d4;
+            border-color: #b8894a;
+        }
+
+        /* main menu container */
+        .menu-wrapper {
+            max-width: 1280px;
+            margin: 1.5rem auto;
+            padding: 0 1.2rem 2.5rem;
+        }
+
+        /* section style — elegant cards */
+        .menu-section {
+            background: #ffffff;
+            border-radius: 24px;
+            margin-bottom: 1.8rem;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.03), 0 2px 4px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            border: 1px solid #f0e2d0;
+            transition: opacity 0.2s;
+        }
+        .section-title {
+            background: #f9f1e8;
+            padding: 0.7rem 1.2rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            letter-spacing: -0.2px;
+            color: #4a2e22;
+            border-left: 5px solid #c9a063;
+            border-bottom: 1px solid #eedfcb;
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .section-title span {
+            font-size: 0.7rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            color: #9b7a54;
+        }
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.1rem;
+            padding: 0.6rem 1rem 0.8rem 1rem;
+        }
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 0.5rem 0.3rem;
+            border-bottom: 1px dashed #f0e2d2;
+            font-size: 0.92rem;
+            font-weight: 450;
+            transition: background 0.1s ease;
+        }
+        .menu-item:hover {
+            background: #fef8f0;
+            border-radius: 10px;
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+        .item-name {
+            flex: 1;
+            padding-right: 0.6rem;
+            color: #2c2418;
+        }
+        .item-price {
+            font-weight: 600;
+            color: #aa7c4a;
+            white-space: nowrap;
+            font-size: 0.9rem;
+        }
+        .tax-note {
+            background: #e8ddcf;
+            text-align: center;
+            padding: 0.6rem;
+            border-radius: 40px;
+            margin: 1.5rem 0 1.2rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #4a2e22;
+        }
+        footer {
+            text-align: center;
+            padding: 1.5rem 1rem 1rem;
+            border-top: 1px solid #e2d3c2;
+            margin-top: 1.5rem;
+            color: #6b4e31;
+            font-size: 0.75rem;
+        }
+        footer a {
+            color: #b97f3b;
+            text-decoration: none;
+        }
+        .hidden-section {
+            display: none;
+        }
+
+        /* ========= RESPONSIVE: MOBILE ========= */
+        @media (max-width: 550px) {
+            .header-container {
+                padding: 0.6rem 0.8rem;
+                gap: 0.5rem;
+            }
+            .header-placeholder {
+                width: 50px;
+            }
+            .brand-center h1 {
+                font-size: 1rem;
+            }
+            .company-tagline {
+                font-size: 0.5rem;
+                letter-spacing: 1px;
+            }
+            .filter-bar {
+                padding: 0.6rem 0.8rem;
+                gap: 0.6rem;
+            }
+            .filter-btn {
+                font-size: 0.75rem;
+                padding: 0.3rem 0.9rem;
+            }
+            .section-title {
+                font-size: 1.2rem;
+                padding: 0.6rem 1rem;
+            }
+            .menu-grid {
+                padding: 0.5rem 0.8rem 0.7rem;
+            }
+            .menu-item {
+                font-size: 0.85rem;
+                padding: 0.45rem 0.2rem;
+            }
+            .item-price {
+                font-size: 0.85rem;
+            }
+            .menu-wrapper {
+                padding: 0 0.8rem 1.8rem;
+                margin: 1rem auto;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .brand-center h1 {
+                font-size: 0.7rem;
+            }
+            .company-tagline {
+                font-size: 0.5rem;
+            }
+            .header-placeholder {
+                width: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- STICKY GROUP: header + filter bar together -->
+<div class="sticky-header-group">
+    <!-- HEADER: Logo left | Company center | empty right spacer for balance -->
+    <div class="header-container">
+        <!-- LEFT: Logo - NO max-width/height, you can set exact dimensions -->
+        <div class="logo-wrapper">
+            <img class="logo" src="Cafe.png" alt="Dordenma Logo" style="width: 70px; height: auto;" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext x=%2750%27 y=%2765%27 font-size=%2740%27 text-anchor=%27middle%27 fill=%27%23d4af7a%27%3E☕%3C/text%3E%3C/svg%3E'; this.style.width='70px';">
+        </div>
+
+        <!-- CENTER: Company Name & Tagline -->
+        <div class="brand-center">
+            <h1>DORDENMA RESTAURANT & CAFÉ</h1>
+            <div class="company-tagline">✦ fine dining & coffee house ✦</div>
+        </div>
+
+        <!-- RIGHT: Empty placeholder to keep centering (same width as logo area) -->
+        <div class="header-placeholder"></div>
+    </div>
+
+    <!-- THREE CATEGORY FILTERS -->
+    <div class="filter-bar">
+        <button class="filter-btn active" data-filter="all">ALL</button>
+        <button class="filter-btn" data-filter="cafe">CAFE</button>
+        <button class="filter-btn" data-filter="restaurant">RESTAURANT</button>
+    </div>
+</div>
+
+<main class="menu-wrapper">
+    <!-- ========== CAFE SECTIONS ========== -->
+    <div class="menu-section cafe-section" data-category="cafe">
+        <div class="section-title">☕ Hot Coffee <span>espresso · classics</span></div>
+        <div class="menu-grid" id="hot-coffee-grid"></div>
+    </div>
+
+    <div class="menu-section cafe-section" data-category="cafe">
+        <div class="section-title">🧊 Cold Coffee & Iced Specials</div>
+        <div class="menu-grid" id="cold-coffee-grid"></div>
+    </div>
+
+    <div class="menu-section cafe-section" data-category="cafe">
+        <div class="section-title">🥤 Milkshakes, Frappes & Smoothies</div>
+        <div class="menu-grid" id="frappe-grid"></div>
+    </div>
+
+    <div class="menu-section cafe-section" data-category="cafe">
+        <div class="section-title">🍵 Hot Infusions & Teas</div>
+        <div class="menu-grid" id="hot-tea-grid"></div>
+    </div>
+
+    <div class="menu-section cafe-section" data-category="cafe">
+        <div class="section-title">🧃 Iced Tea, Juices & Coolers</div>
+        <div class="menu-grid" id="iced-juice-grid"></div>
+    </div>
+
+    <div class="menu-section cafe-section" data-category="cafe">
+        <div class="section-title">🍰 Bake Items & Cakes</div>
+        <div class="menu-grid" id="bakery-grid"></div>
+    </div>
+
+    <!-- ========== RESTAURANT SECTIONS ========== -->
+    <div class="menu-section restaurant-section" data-category="restaurant">
+        <div class="section-title">🍽️ Western Fare</div>
+        <div class="menu-grid" id="western-grid"></div>
+    </div>
+
+    <div class="menu-section restaurant-section" data-category="restaurant">
+        <div class="section-title">🥟 Local with Oriental Fusion</div>
+        <div class="menu-grid" id="oriental-grid"></div>
+    </div>
+
+    <div class="menu-section restaurant-section" data-category="restaurant">
+        <div class="section-title">🇮🇳 Indian Mella & Specialties</div>
+        <div class="menu-grid" id="indian-grid"></div>
+    </div>
+
+    <div class="menu-section restaurant-section" data-category="restaurant">
+        <div class="section-title">🍨 Desserts & Sweets</div>
+        <div class="menu-grid" id="desserts-grid"></div>
+    </div>
+
+    <div class="menu-section restaurant-section" data-category="restaurant">
+        <div class="section-title">🥤 Beverages (Restaurant)</div>
+        <div class="menu-grid" id="resto-bev-grid"></div>
+    </div>
+
+    <div class="tax-note">
+       ✦ INCLUSIVE OF 5% GST & 10% Service Charge  ✦
+    </div>
+
+    <footer>
+        <p>📍 Dordenma Restaurant & Café  · Thimphu · Bhutan<br>
+        <p style="margin-top:0.3rem;">© 2025 Dordenma — Tradition meets contemporary flavours</p>
+    </footer>
+</main>
+
+<script>
+    // --------------------------------------------------------------
+    // FULL MENU DATA FROM DORDENMA-CAFÉ MENU.docx
+    // --------------------------------------------------------------
+    const menuDB = {
+        hotCoffee: [
+            "Espresso|90", "Long Black|120", "Americano|120", "Cappuccino|90", "Café Latte|90",
+            "Flat White|138", "Caramel Latte|144", "Hazelnut Latte|132", "Café Mocha|132",
+            "Café Miel / Honey Latte|132", "Café Macchiato|96", "Latte Macchiato|96",
+            "Café Bombom|144", "Affogato|180", "Espresso (Dbl)|120", "Decaffeinated Coffee|90"
+        ],
+        coldCoffee: [
+            "Iced Espresso / Café Shakerato|132", "Hazelnut Shakerato|144", "Iced Long Black / Iced Americano|120",
+            "Iced Café Latte|132", "Iced Caramel Latte|144", "Iced Hazelnut Latte|144", "Iced Vanilla Latte|144",
+            "Iced Strawberry Latte|144", "Iced Matcha Latte|144", "Blueberry Coffee Milk|156",
+            "Oreo Coffee Milk|156", "Iced Chocolate|156", "Japanese Coffee Jelly|180"
+        ],
+        shakesFrappe: [
+            "Chocolate Shake|144", "Vanilla Shake|144", "Strawberry Shake|144", "Caramel Shake|144",
+            "Banana Shake|144", "Mocha Frappe|156", "Café Frappe|156", "Banana Yogurt & Honey Smoothie|156",
+            "Fresh Summer Smoothie|168", "Smoothie of the day (Mango/Banana/Vanilla)|150"
+        ],
+        hotInfusions: [
+            "Masala Chai Latte|144", "Ginger Lemon Tea|132", "Honey Lemon Tea|108", "Lemon Honey|108",
+            "Elechi Tea|108", "Hot Chocolate|130", "Milk Coffee|84", "Milk Tea|78", "Masala Tea|60",
+            "Ginger Tea|60", "Cardamom Tea|60", "Plain Tea|60", "Black Tea|48", "Green Tea|120"
+        ],
+        icedJuices: [
+            "Black Iced Tea|90", "Iced Caramel Milk Tea|132", "Matcha Honey Lemon|132", "Blueberry Green Tea|156",
+            "Blue Green Soda|156", "Fresh Lime Soda|132", "Fresh Orange Juice|200", "Fresh Watermelon Juice|200",
+            "Fresh Pineapple Juice|200", "Lipton Ice Tea|120", "Coke / Diet Coke / Sprite / Fanta / Power (Can)|120",
+            "Water 500ml|25"
+        ],
+        bakery: [
+            "Cheese Cake|192", "Chocolate Brownie|70", "Banana Bread|48", "Brownie|102", "Marble Cake|72",
+            "Apple Pie|108", "Chocolate Cake|120", "Banana Forest|108", "Butter Scotch|120", "Plain Doughnut|60",
+            "Chocolate Doughnut|66", "Chocolate Cookies (Pcs)|30", "Oat Cookies|30", "Tiramisu|180",
+            "Fruit Tart|96", "Cheese Stick (Pkt)|150", "Coconut Cookies (Pkt)|120", "Mango Cake|120",
+            "Filled Doughnut|84", "Pineapple Upside Down Cake|120", "Black Forest|108", "Cup Cake|40",
+            "Butter Cake|90"
+        ],
+        western: [
+            "Jalapeno Popper|110", "Mozzarella Cheese Sticks|300", "Onion Rings|250", "Cheese Garlic Bread|150",
+            "Garlic Bread|150", "Cheese Chili Toast|150", "Veg Burger|150", "Veg Club Sandwich|350",
+            "Grilled Sandwich|150", "Veg Sandwich (Plain/Toasted)|150", "Bombay Sandwich|250", "French Fries|175"
+        ],
+        oriental: [
+            "Veg Momo|130", "Cheese Momo|130", "Jhol Momo|130", "Veg Thukpa|120", "Egg Thukpa|200",
+            "Bath Thup|260", "Chow Mein|150", "Hakka Noodles|200", "Veg Fried Rice|150", "Egg Fried Rice|150",
+            "Dordenma Dumpling (Paneer/Veg)|150", "Chili Paneer|350", "Honey Chilli Potatoes|120",
+            "Plain Potatoes|120", "Crispy Corn|250"
+        ],
+        indianMella: [
+            "South Indian Combo (Dosa/Idli/Vada etc.)|300", "Dosa (Plain/Ema Datshi/Masala/Cheese/Egg)|200",
+            "Idli|120", "Medu Vada|120", "Idli Vada Combo|150", "Dordenma Kathi Roll (Egg/Paneer/Veg)|140",
+            "Poori Bhaji|140", "Chole Bhature|140", "Dordenma Ke Samosa|50", "Pokora (Egg/Paneer/Veg)|120",
+            "Dordenma Parda Biryani (Egg/Veg)|280", "Parathas (Egg/Potato/Paneer)|50", "Kewa Datsi with Rice|240",
+            "Pav Bhaji|200"
+        ],
+        desserts: [
+            "Gulab Jamun|50", "Rasgulla|50", "Chocolate Brownie|70", "Cheese Cake|150", "Kolkata Kathi Roll|200",
+            "Chole Kulcha|200", "Samosa|70", "Veg Biryani|300"
+        ],
+        restoBev: [
+            "Sweet Lassi|100", "Salted Lassi|100", "Plain Lassi|104", "Milk|130", "Fresh Lime Juice|200"
+        ]
+    };
+
+    function renderMenu(containerId, itemsArray) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        container.innerHTML = '';
+        itemsArray.forEach(itemRaw => {
+            let [name, price] = itemRaw.split('|');
+            if (!price) return;
+            let displayPrice = `Nu. ${price}/-`;
+            if (price.includes('-')) displayPrice = `Nu. ${price}`;
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'menu-item';
+            itemDiv.innerHTML = `<span class="item-name">${name}</span><span class="item-price">${displayPrice}</span>`;
+            container.appendChild(itemDiv);
+        });
+    }
+
+    // render all sections
+    renderMenu('hot-coffee-grid', menuDB.hotCoffee);
+    renderMenu('cold-coffee-grid', menuDB.coldCoffee);
+    renderMenu('frappe-grid', menuDB.shakesFrappe);
+    renderMenu('hot-tea-grid', menuDB.hotInfusions);
+    renderMenu('iced-juice-grid', menuDB.icedJuices);
+    renderMenu('bakery-grid', menuDB.bakery);
+    renderMenu('western-grid', menuDB.western);
+    renderMenu('oriental-grid', menuDB.oriental);
+    renderMenu('indian-grid', menuDB.indianMella);
+    renderMenu('desserts-grid', menuDB.desserts);
+    renderMenu('resto-bev-grid', menuDB.restoBev);
+
+    // FILTER LOGIC
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const cafeSections = document.querySelectorAll('.cafe-section');
+    const restaurantSections = document.querySelectorAll('.restaurant-section');
+
+    function setActiveFilter(activeFilterValue) {
+        filterButtons.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.filter === activeFilterValue);
+        });
+        if (activeFilterValue === 'all') {
+            cafeSections.forEach(s => s.classList.remove('hidden-section'));
+            restaurantSections.forEach(s => s.classList.remove('hidden-section'));
+        } else if (activeFilterValue === 'cafe') {
+            cafeSections.forEach(s => s.classList.remove('hidden-section'));
+            restaurantSections.forEach(s => s.classList.add('hidden-section'));
+        } else if (activeFilterValue === 'restaurant') {
+            cafeSections.forEach(s => s.classList.add('hidden-section'));
+            restaurantSections.forEach(s => s.classList.remove('hidden-section'));
+        }
+    }
+
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => setActiveFilter(e.currentTarget.dataset.filter));
+    });
+    setActiveFilter('all');
+
+    // Allow dynamic logo resizing: you can change the logo dimensions anytime
+    // Just modify the style attribute on the logo img
+    const logoImg = document.querySelector('.logo');
+    if (logoImg) {
+        // Optional: you can uncomment below to make logo size adjustable via console if needed
+        console.log('Logo dimensions can be changed directly via inline style. Example: document.querySelector(".logo").style.width = "100px"');
+    }
+</script>
+</body>
+</html>
