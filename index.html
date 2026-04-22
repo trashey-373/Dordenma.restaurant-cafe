@@ -29,30 +29,26 @@
             z-index: 100;
         }
 
-        /* HEADER: Logo left, Company centered */
         .header-container {
             background: #331f02;
             border-bottom: 3px solid #d0d326a2;
             box-shadow: 0 6px 18px rgba(0,0,0,0.08);
             padding: 0.7rem 1.5rem;
-            display: flex;
+            
             align-items: center;
             justify-content: space-between;
             gap: 1rem;
         }
 
-        /* LEFT: Logo - NO max-width, NO max-height, you control dimensions */
         .logo-wrapper {
             flex-shrink: 0;
+            text-align: center;
         }
         .logo {
-            display: block;
             width: auto;
             height: auto;
-            /* No restrictions - you can set exact width/height on the img tag or via inline style */
         }
 
-        /* CENTER: Company Name & Tagline */
         .brand-center {
             text-align: center;
             flex: 1;
@@ -60,7 +56,7 @@
         .brand-center h1 {
             font-family: 'Cormorant Garamond', serif;
             font-weight: 700;
-            font-size: 1.6rem;
+            font-size: 1.9rem;
             letter-spacing: 1px;
             color: #ffffff;
             margin: 0;
@@ -75,16 +71,14 @@
             font-weight: 400;
         }
 
-        /* Placeholder for right side to keep centering (empty) */
         .header-placeholder {
             width: 70px;
             flex-shrink: 0;
             visibility: hidden;
         }
 
-        /* ========= 3 CATEGORY FILTER BUTTONS ========= */
+        /* ========= FILTER BAR ========= */
         .filter-bar {
-            background: #ffffff;
             border-bottom: 1px solid #eedfcb;
             padding: 0.8rem 1rem;
             display: flex;
@@ -92,7 +86,7 @@
             gap: 0.8rem;
             flex-wrap: wrap;
             backdrop-filter: blur(12px);
-            background: rgba(255, 252, 245, 0.98);
+           
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
         .filter-btn {
@@ -100,10 +94,10 @@
             font-weight: 600;
             font-size: 0.9rem;
             padding: 0.4rem 1.4rem;
-            border-radius: 40px;
+            border-radius: 5px;
             background: transparent;
-            border: 1.5px solid #d4b48c;
-            color: #4a2e22;
+            border: .5px solid #d4b48c;
+            color: #d4b48c;
             cursor: pointer;
             transition: all 0.2s ease;
             letter-spacing: 0.5px;
@@ -119,63 +113,83 @@
             border-color: #b8894a;
         }
 
-        /* main menu container */
+        /* ========= MAIN WRAPPER ========= */
         .menu-wrapper {
             max-width: 1280px;
             margin: 1.5rem auto;
             padding: 0 1.2rem 2.5rem;
         }
 
-        /* section style — elegant cards */
+        /* =========================================================
+           NEW: SKETCH-STYLE LABELED BOX SECTION
+           Title sits top-left; a line extends from title to the
+           right edge — just like the hand-drawn layout.
+           ========================================================= */
         .menu-section {
+            position: relative;
+            margin-bottom: 2rem;
+            padding: 0;
+            /* Top border hidden initially — title + line will draw it */
+            border:.5px solid #c9a063;
+            border-radius: 5px;
+            /* clip top-left corner area so title can sit above it */
+            /* We'll use the ::before trick for the right-side line */
             background: #ffffff;
-            border-radius: 24px;
-            margin-bottom: 1.8rem;
-            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.03), 0 2px 4px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
-            border: 1px solid #f0e2d0;
             transition: opacity 0.2s;
+            
         }
+
+        /* The title label — floats at top-left, breaking the top border */
         .section-title {
-            background: #f9f1e8;
-            padding: 0.7rem 1.2rem;
+            position: absolute;
+            top: -0.85rem;         /* lifts it above the border */
+            left: 1rem;
+            background: #fefaf5;   /* matches page bg so it "cuts" the border */
+            padding: 0 0.5rem;
             font-family: 'Cormorant Garamond', serif;
             font-weight: 700;
-            font-size: 1.4rem;
-            letter-spacing: -0.2px;
+            font-size: 1.35rem;
             color: #4a2e22;
-            border-left: 5px solid #c9a063;
-            border-bottom: 1px solid #eedfcb;
             display: flex;
-            align-items: baseline;
-            justify-content: space-between;
-            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.4rem;
+            white-space: nowrap;
+            letter-spacing: -0.2px;
+            line-height: 1.6;
         }
-        .section-title span {
-            font-size: 0.7rem;
+
+        .section-title .title-sub {
+            font-size: 0.65rem;
             font-family: 'Inter', sans-serif;
             font-weight: 400;
             color: #9b7a54;
+            letter-spacing: 0.5px;
         }
+
+        /* Inner content area */
         .menu-grid {
             display: grid;
             grid-template-columns: 1fr;
             gap: 0.1rem;
-            padding: 0.6rem 1rem 0.8rem 1rem;
+            padding: 1.2rem 1.2rem 0.8rem 1.2rem;   /* top padding gives space under raised title */
         }
+
         .menu-item {
             display: flex;
             justify-content: space-between;
             align-items: baseline;
             padding: 0.5rem 0.3rem;
-            border-bottom: 1px dashed #f0e2d2;
+            /*border-bottom: 1px dashed #f0e2d2;*/
             font-size: 0.92rem;
             font-weight: 450;
             transition: background 0.1s ease;
         }
+        .menu-item:last-child {
+            border-bottom: none;
+        }
         .menu-item:hover {
             background: #fef8f0;
-            border-radius: 10px;
+            border-radius: 8px;
             padding-left: 0.5rem;
             padding-right: 0.5rem;
         }
@@ -190,6 +204,7 @@
             white-space: nowrap;
             font-size: 0.9rem;
         }
+
         .tax-note {
             background: #e8ddcf;
             text-align: center;
@@ -200,13 +215,14 @@
             font-weight: 500;
             color: #4a2e22;
         }
+
         footer {
             text-align: center;
             padding: 1.5rem 1rem 1rem;
             border-top: 1px solid #e2d3c2;
             margin-top: 1.5rem;
             color: #6b4e31;
-            font-size: 0.75rem;
+            font-size: 10px;
         }
         footer a {
             color: #b97f3b;
@@ -214,6 +230,11 @@
         }
         .hidden-section {
             display: none;
+        }
+
+        .theme {
+            font-size: 16px;
+            font-weight: bold;
         }
 
         /* ========= RESPONSIVE: MOBILE ========= */
@@ -225,8 +246,9 @@
             .header-placeholder {
                 width: 50px;
             }
+            
             .brand-center h1 {
-                font-size: 1rem;
+                font-size: 1.5rem;
             }
             .company-tagline {
                 font-size: 0.5rem;
@@ -241,11 +263,10 @@
                 padding: 0.3rem 0.9rem;
             }
             .section-title {
-                font-size: 1.2rem;
-                padding: 0.6rem 1rem;
+                font-size: 1.1rem;
             }
             .menu-grid {
-                padding: 0.5rem 0.8rem 0.7rem;
+                padding: 1rem 0.8rem 0.7rem;
             }
             .menu-item {
                 font-size: 0.85rem;
@@ -262,7 +283,7 @@
 
         @media (max-width: 380px) {
             .brand-center h1 {
-                font-size: 0.7rem;
+                font-size: 1.1rem;
             }
             .company-tagline {
                 font-size: 0.5rem;
@@ -275,37 +296,32 @@
 </head>
 <body>
 
-<!-- STICKY GROUP: header + filter bar together -->
 <div class="sticky-header-group">
-    <!-- HEADER: Logo left | Company center | empty right spacer for balance -->
     <div class="header-container">
-        <!-- LEFT: Logo - NO max-width/height, you can set exact dimensions -->
         <div class="logo-wrapper">
-            <img class="logo" src="Cafe.png" alt="Dordenma Logo" style="width: 70px; height: auto;" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext x=%2750%27 y=%2765%27 font-size=%2740%27 text-anchor=%27middle%27 fill=%27%23d4af7a%27%3E☕%3C/text%3E%3C/svg%3E'; this.style.width='70px';">
+            <img class="logo" src="Logo transparent background.png" alt="Dordenma Logo" style="width: 72px; height: 72px;">
         </div>
-
-        <!-- CENTER: Company Name & Tagline -->
         <div class="brand-center">
             <h1>DORDENMA RESTAURANT & CAFÉ</h1>
             <div class="company-tagline">✦ fine dining & coffee house ✦</div>
         </div>
-
-        <!-- RIGHT: Empty placeholder to keep centering (same width as logo area) -->
         <div class="header-placeholder"></div>
-    </div>
 
-    <!-- THREE CATEGORY FILTERS -->
-    <div class="filter-bar">
+        <div class="filter-bar">
         <button class="filter-btn active" data-filter="all">ALL</button>
         <button class="filter-btn" data-filter="cafe">CAFE</button>
         <button class="filter-btn" data-filter="restaurant">RESTAURANT</button>
     </div>
+    </div>
+
+    
 </div>
 
 <main class="menu-wrapper">
+
     <!-- ========== CAFE SECTIONS ========== -->
     <div class="menu-section cafe-section" data-category="cafe">
-        <div class="section-title">☕ Hot Coffee <span>espresso · classics</span></div>
+        <div class="section-title">☕ Hot Coffee </div>
         <div class="menu-grid" id="hot-coffee-grid"></div>
     </div>
 
@@ -361,25 +377,23 @@
     </div>
 
     <div class="tax-note">
-       ✦ INCLUSIVE OF 5% GST & 10% Service Charge  ✦
+        ✦ INCLUSIVE OF 5% GST & 10% Service Charge  ✦
     </div>
 
     <footer>
-        <p>📍 Dordenma Restaurant & Café  · Thimphu · Bhutan<br>
-        <p style="margin-top:0.3rem;">© 2025 Dordenma — Tradition meets contemporary flavours</p>
+        <p class="theme">Tradition meets contemporary flavours</p>
+        <p style="margin-top:0.3rem; font-size:11px">📍 Dordenma Restaurant & Café · Thimphu · Bhutan <br> <a href="https://bhutanhotels.com.bt/">www.bhutanhotels.com.bt</a></p>
+        <p style= "font-size:9px">Copyright © 2026 | Bhutan Hotels and Restaurants</p>
     </footer>
 </main>
 
-<script defer>
-    // --------------------------------------------------------------
-    // FULL MENU DATA FROM DORDENMA-CAFÉ MENU.docx
-    // --------------------------------------------------------------
+<script>
     const menuDB = {
         hotCoffee: [
-            "Espresso|90", "Long Black|120", "Americano|120", "Cappuccino|132", "Café Latte|132",
-            "Flat White|138", "Caramel Latte|144", "Hazelnut Latte|156", "Café Mocha|156",
-            "Café Miel / Honey Latte|156", "Café Macchiato|96", "Latte Macchiato|160",
-            "Café Bombom|144", "Affogato|180", "Espresso (Dbl)|120", "Decaffeinated Coffee|90", "Matcha Latte|150"
+            "Espresso|90", "Long Black|120", "Americano|120", "Cappuccino|90", "Café Latte|90",
+            "Flat White|138", "Caramel Latte|144", "Hazelnut Latte|132", "Café Mocha|132",
+            "Café Miel / Honey Latte|132", "Café Macchiato|96", "Latte Macchiato|96",
+            "Café Bombom|144", "Affogato|180", "Espresso (Dbl)|120", "Decaffeinated Coffee|90"
         ],
         coldCoffee: [
             "Iced Espresso / Café Shakerato|132", "Hazelnut Shakerato|144", "Iced Long Black / Iced Americano|120",
@@ -394,11 +408,11 @@
         ],
         hotInfusions: [
             "Masala Chai Latte|144", "Ginger Lemon Tea|132", "Honey Lemon Tea|108", "Lemon Honey|108",
-            "Elechi Tea|108", "Hot Chocolate|144", "Milk Coffee|84", "Milk Tea|78", "Masala Tea|80",
+            "Elechi Tea|108", "Hot Chocolate|130", "Milk Coffee|84", "Milk Tea|78", "Masala Tea|60",
             "Ginger Tea|60", "Cardamom Tea|60", "Plain Tea|60", "Black Tea|48", "Green Tea|120"
         ],
         icedJuices: [
-            "Black Iced Tea|90", "Iced Caramel Milk Tea|132", "Matcha Honey Lemon|161", "Blueberry Green Tea|156",
+            "Black Iced Tea|90", "Iced Caramel Milk Tea|132", "Matcha Honey Lemon|132", "Blueberry Green Tea|156",
             "Blue Green Soda|156", "Fresh Lime Soda|132", "Fresh Orange Juice|200", "Fresh Watermelon Juice|200",
             "Fresh Pineapple Juice|200", "Lipton Ice Tea|120", "Coke / Diet Coke / Sprite / Fanta / Power (Can)|120",
             "Water 500ml|25"
@@ -408,7 +422,7 @@
             "Apple Pie|108", "Chocolate Cake|120", "Banana Forest|108", "Butter Scotch|120", "Plain Doughnut|60",
             "Chocolate Doughnut|66", "Chocolate Cookies (Pcs)|30", "Oat Cookies|30", "Tiramisu|180",
             "Fruit Tart|96", "Cheese Stick (Pkt)|150", "Coconut Cookies (Pkt)|120", "Mango Cake|120",
-            "Filled Doughnut|108", "Pineapple Upside Down Cake|120", "Black Forest|108", "Cup Cake|40",
+            "Filled Doughnut|84", "Pineapple Upside Down Cake|120", "Black Forest|108", "Cup Cake|40",
             "Butter Cake|90"
         ],
         western: [
@@ -434,7 +448,7 @@
             "Chole Kulcha|200", "Samosa|70", "Veg Biryani|300"
         ],
         restoBev: [
-            "Sweet Lassi|104", "Salted Lassi|104", "Plain Lassi|100", "Milk|130", "Fresh Lime Juice|200"
+            "Sweet Lassi|100", "Salted Lassi|100", "Plain Lassi|104", "Milk|130", "Fresh Lime Juice|200"
         ]
     };
 
@@ -454,7 +468,6 @@
         });
     }
 
-    // render all sections
     renderMenu('hot-coffee-grid', menuDB.hotCoffee);
     renderMenu('cold-coffee-grid', menuDB.coldCoffee);
     renderMenu('frappe-grid', menuDB.shakesFrappe);
@@ -472,34 +485,22 @@
     const cafeSections = document.querySelectorAll('.cafe-section');
     const restaurantSections = document.querySelectorAll('.restaurant-section');
 
-    function setActiveFilter(activeFilterValue) {
-        filterButtons.forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.filter === activeFilterValue);
-        });
-        if (activeFilterValue === 'all') {
+    function setActiveFilter(val) {
+        filterButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.filter === val));
+        if (val === 'all') {
             cafeSections.forEach(s => s.classList.remove('hidden-section'));
             restaurantSections.forEach(s => s.classList.remove('hidden-section'));
-        } else if (activeFilterValue === 'cafe') {
+        } else if (val === 'cafe') {
             cafeSections.forEach(s => s.classList.remove('hidden-section'));
             restaurantSections.forEach(s => s.classList.add('hidden-section'));
-        } else if (activeFilterValue === 'restaurant') {
+        } else {
             cafeSections.forEach(s => s.classList.add('hidden-section'));
             restaurantSections.forEach(s => s.classList.remove('hidden-section'));
         }
     }
 
-    filterButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => setActiveFilter(e.currentTarget.dataset.filter));
-    });
+    filterButtons.forEach(btn => btn.addEventListener('click', e => setActiveFilter(e.currentTarget.dataset.filter)));
     setActiveFilter('all');
-
-    // Allow dynamic logo resizing: you can change the logo dimensions anytime
-    // Just modify the style attribute on the logo img
-    const logoImg = document.querySelector('.logo');
-    if (logoImg) {
-        // Optional: you can uncomment below to make logo size adjustable via console if needed
-        console.log('Logo dimensions can be changed directly via inline style. Example: document.querySelector(".logo").style.width = "100px"');
-    }
 </script>
 </body>
 </html>
