@@ -34,7 +34,6 @@
             border-bottom: 3px solid #d0d326a2;
             box-shadow: 0 6px 18px rgba(0,0,0,0.08);
             padding: 0.7rem 1.5rem;
-            
             align-items: center;
             justify-content: space-between;
             gap: 1rem;
@@ -86,7 +85,6 @@
             gap: 0.8rem;
             flex-wrap: wrap;
             backdrop-filter: blur(12px);
-           
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
         .filter-btn {
@@ -251,6 +249,11 @@
             font-weight: bold;
         }
 
+        /* scroll-behavior smooth for better UX */
+        html {
+            scroll-behavior: smooth;
+        }
+
         /* ========= RESPONSIVE ========= */
         @media (max-width: 550px) {
             .header-container {
@@ -334,11 +337,14 @@
 </div>
 
 <main class="menu-wrapper">
+    <!-- Anchor targets for smooth scroll to top of each section group -->
+    <div id="cafe-menu-top" style="position: relative; top: -20px; visibility: hidden;"></div>
+    <div id="restaurant-menu-top" style="position: relative; top: -20px; visibility: hidden;"></div>
 
     <!-- ========== CAFE SECTIONS ========== -->
-    <div class="cafe-group-wrapper">
+    <div class="cafe-group-wrapper" id="cafeGroupWrapper">
         <div class="menu-section cafe-section" data-category="cafe">
-            <div class="section-title">☕ Hot Coffee </div>
+            <div class="section-title">☕ Hot Coffee</div>
             <div class="menu-grid" id="hot-coffee-grid"></div>
         </div>
 
@@ -373,7 +379,7 @@
     </div>
 
     <!-- ========== RESTAURANT SECTIONS ========== -->
-    <div class="restaurant-group-wrapper">
+    <div class="restaurant-group-wrapper" id="restaurantGroupWrapper">
         <div class="menu-section restaurant-section" data-category="restaurant">
             <div class="section-title">🍽️ Western Fare</div>
             <div class="menu-grid" id="western-grid"></div>
@@ -412,7 +418,7 @@
 </main>
 
 <script>
-    // ---------- MENU DATABASE (unchanged structure) ----------
+    // ---------- MENU DATABASE (unchanged) ----------
     const menuDB = {
         hotCoffee: [
             "Espresso|90", "Long Black|120", "Americano|120", "Cappuccino|90", "Café Latte|90",
@@ -477,7 +483,7 @@
         ]
     };
 
-    // Helper: render items into grid
+    // Helper: render items
     function renderMenu(containerId, itemsArray) {
         const container = document.getElementById(containerId);
         if (!container) return;
@@ -494,7 +500,7 @@
         });
     }
 
-    // initialize all menus
+    // init all menu grids
     renderMenu('hot-coffee-grid', menuDB.hotCoffee);
     renderMenu('cold-coffee-grid', menuDB.coldCoffee);
     renderMenu('frappe-grid', menuDB.shakesFrappe);
@@ -507,29 +513,48 @@
     renderMenu('desserts-grid', menuDB.desserts);
     renderMenu('resto-bev-grid', menuDB.restoBev);
 
-    // FILTER LOGIC (including smooth handling of tax note visibility)
+    // DOM elements for filtering & scroll targets
     const filterButtons = document.querySelectorAll('.filter-btn');
     const cafeSections = document.querySelectorAll('.cafe-section');
     const restaurantSections = document.querySelectorAll('.restaurant-section');
-    const cafeTaxWrapper = document.getElementById('cafeTaxNote')?.parentElement; // the cafe-group-wrapper? we'll rather target note individually
-    const restaurantTaxWrapper = document.getElementById('restaurantTaxNote')?.parentElement;
-    // For robust toggling, get the actual tax note elements and their wrapper groups
+    const cafeGroupDiv = document.getElementById('cafeGroupWrapper');
+    const restaurantGroupDiv = document.getElementById('restaurantGroupWrapper');
     const cafeTaxNoteEl = document.getElementById('cafeTaxNote');
     const restaurantTaxNoteEl = document.getElementById('restaurantTaxNote');
-    const cafeGroupDiv = document.querySelector('.cafe-group-wrapper');
-    const restaurantGroupDiv = document.querySelector('.restaurant-group-wrapper');
+    
+    // Anchors for top of each menu block
+    const cafeTopAnchor = document.getElementById('cafe-menu-top');
+    const restaurantTopAnchor = document.getElementById('restaurant-menu-top');
 
-    function setActiveFilter(val) {
+    // Helper scroll to element with optional offset (accounting sticky header)
+    function scrollToElement(element, offset = 20) {
+        if (!element) return;
+        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+        const headerHeight = document.querySelector('.sticky-header-group')?.offsetHeight || 80;
+        // smooth scroll considering header height + little extra padding
+        const offsetPosition = elementPosition - headerHeight - offset;
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+        });
+    }
+
+    // Filter + Scroll Logic: update visibility and then scroll to appropriate menu top
+    function setActiveFilterAndScroll(val) {
+        // 1. Update active class
         filterButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.filter === val));
         
+        // 2. Show/hide sections with smooth transition effect through classes
         if (val === 'all') {
-            // Show all sections + their corresponding tax notes
             cafeSections.forEach(s => s.classList.remove('hidden-section'));
             restaurantSections.forEach(s => s.classList.remove('hidden-section'));
             if (cafeGroupDiv) cafeGroupDiv.style.display = 'block';
             if (restaurantGroupDiv) restaurantGroupDiv.style.display = 'block';
             if (cafeTaxNoteEl) cafeTaxNoteEl.style.display = 'block';
             if (restaurantTaxNoteEl) restaurantTaxNoteEl.style.display = 'block';
+            // For "ALL" we don't force scroll to any specific top, but keep natural position.
+            // However if user clicks ALL from another filter, we keep scroll (no forced jump)
+            // but we can optionally stay where they are, but problem only existed for Cafe/Restaurant scroll, so fine.
         } 
         else if (val === 'cafe') {
             cafeSections.forEach(s => s.classList.remove('hidden-section'));
@@ -538,6 +563,17 @@
             if (restaurantGroupDiv) restaurantGroupDiv.style.display = 'none';
             if (cafeTaxNoteEl) cafeTaxNoteEl.style.display = 'block';
             if (restaurantTaxNoteEl) restaurantTaxNoteEl.style.display = 'none';
+            
+            // AFTER updating visibility, scroll to top of cafe menu using anchor
+            // Use a slight delay to ensure DOM reflow and visibility changes are applied, then scroll.
+            setTimeout(() => {
+                if (cafeTopAnchor) {
+                    scrollToElement(cafeTopAnchor, 10);
+                } else {
+                    // fallback: scroll to cafeGroupDiv start
+                    if (cafeGroupDiv) scrollToElement(cafeGroupDiv, 10);
+                }
+            }, 30);
         } 
         else if (val === 'restaurant') {
             cafeSections.forEach(s => s.classList.add('hidden-section'));
@@ -546,43 +582,59 @@
             if (restaurantGroupDiv) restaurantGroupDiv.style.display = 'block';
             if (cafeTaxNoteEl) cafeTaxNoteEl.style.display = 'none';
             if (restaurantTaxNoteEl) restaurantTaxNoteEl.style.display = 'block';
+            
+            setTimeout(() => {
+                if (restaurantTopAnchor) {
+                    scrollToElement(restaurantTopAnchor, 10);
+                } else {
+                    if (restaurantGroupDiv) scrollToElement(restaurantGroupDiv, 10);
+                }
+            }, 30);
         }
     }
 
-    // attach event listeners
-    filterButtons.forEach(btn => btn.addEventListener('click', e => setActiveFilter(e.currentTarget.dataset.filter)));
-    // initial load: 'all' active, everything visible
-    setActiveFilter('all');
-
-    // Additional note: ensure that layout remains pristine if any accidental duplication or missing 
-    // Since we add separate tax notes inside their respective group wrappers -> perfect
-    // Also, static css classes ensure correct color and message differentiation.
-    // Ensure the two tax notes display the distinct messages as required:
-    // Cafe note text: "✦ INCLUSIVE OF 5% GST & 10% Service Charge  ✦"
-    // Restaurant note text: "✦ EXCLUSIVE OF 5% GST & 10% Service Charge  ✦"
-    // (already hardcoded in HTML, but guarantee no future modification.)
+    // Attach event listeners to filter buttons: on click, call filter+scroll
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const filterValue = e.currentTarget.dataset.filter;
+            setActiveFilterAndScroll(filterValue);
+        });
+    });
     
-    // Little extra: smooth filter transition effect
-    const style = document.createElement('style');
-    style.textContent = `
-        .cafe-section, .restaurant-section {
-            transition: opacity 0.2s ease, transform 0.1s;
-        }
+    // Initial state: ALL is active, and no forced scroll needed (just visible)
+    // But for consistency, set initial active filter without scroll interruption
+    function initializeMenu() {
+        // Set default active to 'all' and ensure display states are correct
+        filterButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.filter === 'all'));
+        cafeSections.forEach(s => s.classList.remove('hidden-section'));
+        restaurantSections.forEach(s => s.classList.remove('hidden-section'));
+        if (cafeGroupDiv) cafeGroupDiv.style.display = 'block';
+        if (restaurantGroupDiv) restaurantGroupDiv.style.display = 'block';
+        if (cafeTaxNoteEl) cafeTaxNoteEl.style.display = 'block';
+        if (restaurantTaxNoteEl) restaurantTaxNoteEl.style.display = 'block';
+        // Don't scroll initially, just show all
+    }
+    initializeMenu();
+
+    // Additional safeguard: if any filter is clicked and there is slight flicker, ensured.
+    // Also add small CSS adjustment to guarantee that hidden-section fully hides items.
+    // Add extra style to be certain:
+    const styleFix = document.createElement('style');
+    styleFix.textContent = `
         .hidden-section {
             display: none !important;
         }
         .cafe-group-wrapper, .restaurant-group-wrapper {
-            transition: all 0.15s;
+            transition: opacity 0.15s ease;
         }
-        .tax-note-cafe, .tax-note-restaurant {
-            transition: background 0.2s;
+        html {
+            scroll-behavior: smooth;
         }
     `;
-    document.head.appendChild(style);
+    document.head.appendChild(styleFix);
     
-    // Optional: If the image logo is missing, it won't break, but we make sure alt is present.
-    // For any potential console errors regarding missing image: harmless.
-    console.log("Menu ready — CAFE: inclusive tax, RESTAURANT: exclusive tax.");
+    // Fix for logo if not existent - not an issue.
+    console.log("Menu ready: Filter buttons now scroll to top of Cafe or Restaurant sections (smooth scroll).");
 </script>
 </body>
 </html>
