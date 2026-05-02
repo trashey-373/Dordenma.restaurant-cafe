@@ -121,30 +121,24 @@
         }
 
         /* =========================================================
-           NEW: SKETCH-STYLE LABELED BOX SECTION
-           Title sits top-left; a line extends from title to the
-           right edge — just like the hand-drawn layout.
+           SKETCH-STYLE LABELED BOX SECTION
            ========================================================= */
         .menu-section {
             position: relative;
             margin-bottom: 2rem;
             padding: 0;
-            /* Top border hidden initially — title + line will draw it */
-            border:.5px solid #c9a063;
+            border: .5px solid #c9a063;
             border-radius: 5px;
-            /* clip top-left corner area so title can sit above it */
-            /* We'll use the ::before trick for the right-side line */
             background: #ffffff;
             transition: opacity 0.2s;
-            
         }
 
-        /* The title label — floats at top-left, breaking the top border */
+        /* The title label — floats at top-left */
         .section-title {
             position: absolute;
-            top: -0.85rem;         /* lifts it above the border */
+            top: -0.85rem;
             left: 1rem;
-            background: #fefaf5;   /* matches page bg so it "cuts" the border */
+            background: #fefaf5;
             padding: 0 0.5rem;
             font-family: 'Cormorant Garamond', serif;
             font-weight: 700;
@@ -171,7 +165,7 @@
             display: grid;
             grid-template-columns: 1fr;
             gap: 0.1rem;
-            padding: 1.2rem 1.2rem 0.8rem 1.2rem;   /* top padding gives space under raised title */
+            padding: 1.2rem 1.2rem 0.8rem 1.2rem;
         }
 
         .menu-item {
@@ -179,7 +173,6 @@
             justify-content: space-between;
             align-items: baseline;
             padding: 0.5rem 0.3rem;
-            /*border-bottom: 1px dashed #f0e2d2;*/
             font-size: 0.92rem;
             font-weight: 450;
             transition: background 0.1s ease;
@@ -205,17 +198,38 @@
             font-size: 0.9rem;
         }
 
-        .tax-note {
-            background: #e8ddcf;
+        /* DUAL TAX NOTES: Cafe (inclusive) + Restaurant (exclusive) */
+        .tax-note-cafe,
+        .tax-note-restaurant {
             text-align: center;
-            padding: 0.6rem;
+            padding: 0.7rem 1rem;
             border-radius: 40px;
-            margin: 1.5rem 0 1.2rem;
+            margin: 0.5rem 0 1.5rem;
             font-size: 0.75rem;
-            font-weight: 500;
-            color: #4a2e22;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        }
+        .tax-note-cafe {
+            background: #e1dcd2;
+            color: #2b5e2b;
+            border-left: 4px solid #5b8c5a;
+        }
+        .tax-note-restaurant {
+            background: #e8ddcf;
+            color: #aa5c2c;
+            border-left: 4px solid #b97f3b;
+        }
+        .tax-note-cafe::before {
+            content: "✓ ";
+            font-weight: bold;
+        }
+        .tax-note-restaurant::before {
+            content: "⚠ ";
+            font-weight: bold;
         }
 
+        /* footer and utilities */
         footer {
             text-align: center;
             padding: 1.5rem 1rem 1rem;
@@ -237,7 +251,7 @@
             font-weight: bold;
         }
 
-        /* ========= RESPONSIVE: MOBILE ========= */
+        /* ========= RESPONSIVE ========= */
         @media (max-width: 550px) {
             .header-container {
                 padding: 0.6rem 0.8rem;
@@ -279,6 +293,10 @@
                 padding: 0 0.8rem 1.8rem;
                 margin: 1rem auto;
             }
+            .tax-note-cafe, .tax-note-restaurant {
+                font-size: 0.7rem;
+                padding: 0.6rem;
+            }
         }
 
         @media (max-width: 380px) {
@@ -308,86 +326,93 @@
         <div class="header-placeholder"></div>
 
         <div class="filter-bar">
-        <button class="filter-btn active" data-filter="all">ALL</button>
-        <button class="filter-btn" data-filter="cafe">CAFE</button>
-        <button class="filter-btn" data-filter="restaurant">RESTAURANT</button>
+            <button class="filter-btn active" data-filter="all">ALL</button>
+            <button class="filter-btn" data-filter="cafe">CAFE</button>
+            <button class="filter-btn" data-filter="restaurant">RESTAURANT</button>
+        </div>
     </div>
-    </div>
-
-    
 </div>
 
 <main class="menu-wrapper">
 
     <!-- ========== CAFE SECTIONS ========== -->
-    <div class="menu-section cafe-section" data-category="cafe">
-        <div class="section-title">☕ Hot Coffee </div>
-        <div class="menu-grid" id="hot-coffee-grid"></div>
-    </div>
+    <div class="cafe-group-wrapper">
+        <div class="menu-section cafe-section" data-category="cafe">
+            <div class="section-title">☕ Hot Coffee </div>
+            <div class="menu-grid" id="hot-coffee-grid"></div>
+        </div>
 
-    <div class="menu-section cafe-section" data-category="cafe">
-        <div class="section-title">🧊 Cold Coffee & Iced Specials</div>
-        <div class="menu-grid" id="cold-coffee-grid"></div>
-    </div>
+        <div class="menu-section cafe-section" data-category="cafe">
+            <div class="section-title">🧊 Cold Coffee & Iced Specials</div>
+            <div class="menu-grid" id="cold-coffee-grid"></div>
+        </div>
 
-    <div class="menu-section cafe-section" data-category="cafe">
-        <div class="section-title">🥤 Milkshakes, Frappes & Smoothies</div>
-        <div class="menu-grid" id="frappe-grid"></div>
-    </div>
+        <div class="menu-section cafe-section" data-category="cafe">
+            <div class="section-title">🥤 Milkshakes, Frappes & Smoothies</div>
+            <div class="menu-grid" id="frappe-grid"></div>
+        </div>
 
-    <div class="menu-section cafe-section" data-category="cafe">
-        <div class="section-title">🍵 Hot Infusions & Teas</div>
-        <div class="menu-grid" id="hot-tea-grid"></div>
-    </div>
+        <div class="menu-section cafe-section" data-category="cafe">
+            <div class="section-title">🍵 Hot Infusions & Teas</div>
+            <div class="menu-grid" id="hot-tea-grid"></div>
+        </div>
 
-    <div class="menu-section cafe-section" data-category="cafe">
-        <div class="section-title">🧃 Iced Tea, Juices & Coolers</div>
-        <div class="menu-grid" id="iced-juice-grid"></div>
-    </div>
+        <div class="menu-section cafe-section" data-category="cafe">
+            <div class="section-title">🧃 Iced Tea, Juices & Coolers</div>
+            <div class="menu-grid" id="iced-juice-grid"></div>
+        </div>
 
-    <div class="menu-section cafe-section" data-category="cafe">
-        <div class="section-title">🍰 Bake Items & Cakes</div>
-        <div class="menu-grid" id="bakery-grid"></div>
+        <div class="menu-section cafe-section" data-category="cafe">
+            <div class="section-title">🍰 Bake Items & Cakes</div>
+            <div class="menu-grid" id="bakery-grid"></div>
+        </div>
+        <!-- CAFE specific TAX NOTE: INCLUSIVE -->
+        <div class="tax-note-cafe" id="cafeTaxNote">
+            ✦ INCLUSIVE OF 5% GST & 10% Service Charge  ✦
+        </div>
     </div>
 
     <!-- ========== RESTAURANT SECTIONS ========== -->
-    <div class="menu-section restaurant-section" data-category="restaurant">
-        <div class="section-title">🍽️ Western Fare</div>
-        <div class="menu-grid" id="western-grid"></div>
-    </div>
+    <div class="restaurant-group-wrapper">
+        <div class="menu-section restaurant-section" data-category="restaurant">
+            <div class="section-title">🍽️ Western Fare</div>
+            <div class="menu-grid" id="western-grid"></div>
+        </div>
 
-    <div class="menu-section restaurant-section" data-category="restaurant">
-        <div class="section-title">🥟 Local with Oriental Fusion</div>
-        <div class="menu-grid" id="oriental-grid"></div>
-    </div>
+        <div class="menu-section restaurant-section" data-category="restaurant">
+            <div class="section-title">🥟 Local with Oriental Fusion</div>
+            <div class="menu-grid" id="oriental-grid"></div>
+        </div>
 
-    <div class="menu-section restaurant-section" data-category="restaurant">
-        <div class="section-title">🇮🇳 Indian Mella & Specialties</div>
-        <div class="menu-grid" id="indian-grid"></div>
-    </div>
+        <div class="menu-section restaurant-section" data-category="restaurant">
+            <div class="section-title">🇮🇳 Indian Mella & Specialties</div>
+            <div class="menu-grid" id="indian-grid"></div>
+        </div>
 
-    <div class="menu-section restaurant-section" data-category="restaurant">
-        <div class="section-title">🍨 Desserts & Sweets</div>
-        <div class="menu-grid" id="desserts-grid"></div>
-    </div>
+        <div class="menu-section restaurant-section" data-category="restaurant">
+            <div class="section-title">🍨 Desserts & Sweets</div>
+            <div class="menu-grid" id="desserts-grid"></div>
+        </div>
 
-    <div class="menu-section restaurant-section" data-category="restaurant">
-        <div class="section-title">🥤 Beverages (Restaurant)</div>
-        <div class="menu-grid" id="resto-bev-grid"></div>
-    </div>
-
-    <div class="tax-note">
-        ✦ EXCLUSIVE OF 5% GST & 10% Service Charge  ✦
+        <div class="menu-section restaurant-section" data-category="restaurant">
+            <div class="section-title">🥤 Beverages (Restaurant)</div>
+            <div class="menu-grid" id="resto-bev-grid"></div>
+        </div>
+        <!-- RESTAURANT specific TAX NOTE: EXCLUSIVE -->
+        <div class="tax-note-restaurant" id="restaurantTaxNote">
+            ✦ EXCLUSIVE OF 5% GST & 10% Service Charge  ✦
+        </div>
     </div>
 
     <footer>
         <p class="theme">Tradition meets contemporary flavours</p>
         <p style="margin-top:0.3rem; font-size:11px">📍 Dordenma Restaurant & Café · Thimphu · Bhutan <br> <a href="https://bhutanhotels.com.bt/">www.bhutanhotels.com.bt</a></p>
-        <p style= "font-size:9px">Copyright © 2026 | Bhutan Hotels and Restaurants</p>
+        <p style="font-size:9px">Copyright © 2026 | Bhutan Hotels and Restaurants</p>
     </footer>
 </main>
 
 <script>
+    // ---------- MENU DATABASE (unchanged structure) ----------
     const menuDB = {
         hotCoffee: [
             "Espresso|90", "Long Black|120", "Americano|120", "Cappuccino|90", "Café Latte|90",
@@ -452,6 +477,7 @@
         ]
     };
 
+    // Helper: render items into grid
     function renderMenu(containerId, itemsArray) {
         const container = document.getElementById(containerId);
         if (!container) return;
@@ -468,6 +494,7 @@
         });
     }
 
+    // initialize all menus
     renderMenu('hot-coffee-grid', menuDB.hotCoffee);
     renderMenu('cold-coffee-grid', menuDB.coldCoffee);
     renderMenu('frappe-grid', menuDB.shakesFrappe);
@@ -480,27 +507,82 @@
     renderMenu('desserts-grid', menuDB.desserts);
     renderMenu('resto-bev-grid', menuDB.restoBev);
 
-    // FILTER LOGIC
+    // FILTER LOGIC (including smooth handling of tax note visibility)
     const filterButtons = document.querySelectorAll('.filter-btn');
     const cafeSections = document.querySelectorAll('.cafe-section');
     const restaurantSections = document.querySelectorAll('.restaurant-section');
+    const cafeTaxWrapper = document.getElementById('cafeTaxNote')?.parentElement; // the cafe-group-wrapper? we'll rather target note individually
+    const restaurantTaxWrapper = document.getElementById('restaurantTaxNote')?.parentElement;
+    // For robust toggling, get the actual tax note elements and their wrapper groups
+    const cafeTaxNoteEl = document.getElementById('cafeTaxNote');
+    const restaurantTaxNoteEl = document.getElementById('restaurantTaxNote');
+    const cafeGroupDiv = document.querySelector('.cafe-group-wrapper');
+    const restaurantGroupDiv = document.querySelector('.restaurant-group-wrapper');
 
     function setActiveFilter(val) {
         filterButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.filter === val));
+        
         if (val === 'all') {
+            // Show all sections + their corresponding tax notes
             cafeSections.forEach(s => s.classList.remove('hidden-section'));
             restaurantSections.forEach(s => s.classList.remove('hidden-section'));
-        } else if (val === 'cafe') {
+            if (cafeGroupDiv) cafeGroupDiv.style.display = 'block';
+            if (restaurantGroupDiv) restaurantGroupDiv.style.display = 'block';
+            if (cafeTaxNoteEl) cafeTaxNoteEl.style.display = 'block';
+            if (restaurantTaxNoteEl) restaurantTaxNoteEl.style.display = 'block';
+        } 
+        else if (val === 'cafe') {
             cafeSections.forEach(s => s.classList.remove('hidden-section'));
             restaurantSections.forEach(s => s.classList.add('hidden-section'));
-        } else {
+            if (cafeGroupDiv) cafeGroupDiv.style.display = 'block';
+            if (restaurantGroupDiv) restaurantGroupDiv.style.display = 'none';
+            if (cafeTaxNoteEl) cafeTaxNoteEl.style.display = 'block';
+            if (restaurantTaxNoteEl) restaurantTaxNoteEl.style.display = 'none';
+        } 
+        else if (val === 'restaurant') {
             cafeSections.forEach(s => s.classList.add('hidden-section'));
             restaurantSections.forEach(s => s.classList.remove('hidden-section'));
+            if (cafeGroupDiv) cafeGroupDiv.style.display = 'none';
+            if (restaurantGroupDiv) restaurantGroupDiv.style.display = 'block';
+            if (cafeTaxNoteEl) cafeTaxNoteEl.style.display = 'none';
+            if (restaurantTaxNoteEl) restaurantTaxNoteEl.style.display = 'block';
         }
     }
 
+    // attach event listeners
     filterButtons.forEach(btn => btn.addEventListener('click', e => setActiveFilter(e.currentTarget.dataset.filter)));
+    // initial load: 'all' active, everything visible
     setActiveFilter('all');
+
+    // Additional note: ensure that layout remains pristine if any accidental duplication or missing 
+    // Since we add separate tax notes inside their respective group wrappers -> perfect
+    // Also, static css classes ensure correct color and message differentiation.
+    // Ensure the two tax notes display the distinct messages as required:
+    // Cafe note text: "✦ INCLUSIVE OF 5% GST & 10% Service Charge  ✦"
+    // Restaurant note text: "✦ EXCLUSIVE OF 5% GST & 10% Service Charge  ✦"
+    // (already hardcoded in HTML, but guarantee no future modification.)
+    
+    // Little extra: smooth filter transition effect
+    const style = document.createElement('style');
+    style.textContent = `
+        .cafe-section, .restaurant-section {
+            transition: opacity 0.2s ease, transform 0.1s;
+        }
+        .hidden-section {
+            display: none !important;
+        }
+        .cafe-group-wrapper, .restaurant-group-wrapper {
+            transition: all 0.15s;
+        }
+        .tax-note-cafe, .tax-note-restaurant {
+            transition: background 0.2s;
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Optional: If the image logo is missing, it won't break, but we make sure alt is present.
+    // For any potential console errors regarding missing image: harmless.
+    console.log("Menu ready — CAFE: inclusive tax, RESTAURANT: exclusive tax.");
 </script>
 </body>
 </html>
